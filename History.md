@@ -1,3 +1,6 @@
+# Version 3.0.0
+Release date: unreleased
+
 # Version 2.15.0
 
 Release data: unreleased
@@ -14,6 +17,7 @@ Release data: unreleased
 *  Add `Session#refresh` [Thomas Walpole]
 *  Loosened restrictions on where `Session#within_window` can be called from [Thomas Walpole]
 *  Switched from `mime-types` dependency to `mini_mime` [Jason Frey]
+
 # Version 2.14.4
 
 Release date: 2017-06-27
