@@ -92,6 +92,12 @@ matrix:
       addons:
         firefox: latest-nightly
       script: MOZ_HEADLESS=1 bundle exec rake travis
+    - gemfile: Gemfile
+      os: osx
+      osx_image: xcode8.3
+      rvm: 2.4.1
+      script: bundle exec rake spec_safari
+
   allow_failures:
     - gemfile: gemfiles/Gemfile.beta-versions
     - gemfile: gemfiles/Gemfile.edge-marionette
@@ -101,6 +107,7 @@ matrix:
       rvm: 2.4.1
       env: CAPYBARA_CHROME_HEADLESS=true
     - script: MOZ_HEADLESS=1 bundle exec rake travis
+    - os: osx
 before_install:
   - mkdir -p ~/drivers; export PATH=~/drivers:$PATH;
   - if [ $CAPYBARA_CHROME ] || [ $CAPYBARA_CHROME_HEADLESS ]; then
