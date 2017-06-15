@@ -3,15 +3,18 @@ require 'spec_helper'
 require 'selenium-webdriver'
 require 'shared_selenium_session'
 
+
+opts = {
+  browser: :safari
+}
+opts[:driver_path] = '/Applications/Safari Technology Preview.app/Contents/MacOS/safaridriver' if ENV['STP']
+
 Capybara.register_driver :selenium_safari do |app|
-  Capybara::Selenium::Driver.new(app, :browser => :safari, driver_path: '/Applications/Safari Technology Preview.app/Contents/MacOS/safaridriver')
+  Capybara::Selenium::Driver.new(app, opts)
 end
 
 Capybara.register_driver :selenium_safari_clear_storage do |app|
-  Capybara::Selenium::Driver.new(app, :browser => :safari,
-                                      driver_path: '/Applications/Safari Technology Preview.app/Contents/MacOS/safaridriver',
-                                      clear_local_storage: true,
-                                      clear_session_storage: true)
+  Capybara::Selenium::Driver.new(app, opts.merge(clear_local_storage: true, clear_session_storage: true))
 end
 
 module TestSessions
