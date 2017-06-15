@@ -1,97 +1,95 @@
 language: ruby
 sudo: required
 dist: trusty
-rvm:
-  - 2.4.1
-  - 2.3.3
-  - jruby-9.1.8.0
-  - rbx-3
-gemfile:
-  - Gemfile
+# rvm:
+#   - 2.4.1
+#   - 2.3.3
+#   - jruby-9.1.8.0
+#   - rbx-3
+# gemfile:
+#   - Gemfile
 env:
   global:
     - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
     - JAVA_OPTS=-Djava.security.egd=file:/dev/urandom
-  # matrix:
-  #   - WINDOW_TEST=true
 
-addons:
-  firefox: latest
-  apt:
-    packages:
-      - awesome
+# addons:
+#   firefox: latest
+#   apt:
+#     packages:
+#       - awesome
 
 matrix:
   include:
-    - gemfile: gemfiles/Gemfile.rspec-34
-      rvm: 2.3.3
-      env: CAPYBARA_CHROME=true
-      addons:
-        apt:
-          sources:
-            - google-chrome
-          packages:
-            - google-chrome-stable
-            - awesome
-    - gemfile: Gemfile
-      rvm: 2.4.1
-      env: CAPYBARA_CHROME_HEADLESS=true
-      addons:
-        apt:
-          sources:
-            - google-chrome
-          packages:
-            - google-chrome-stable
-            - google-chrome-beta
-            - awesome
-    - gemfile: gemfiles/Gemfile.ruby-20
-      env:
-        - CAPYBARA_LEGACY_FF=true
-      rvm: 2.0.0
-      addons:
-        firefox: 47.0.1
-        apt:
-          packages:
-            - awesome
-    - gemfile: gemfiles/Gemfile.ruby-19
-      env:
-        - CAPYBARA_LEGACY_FF=true
-        - SKIP_WINDOW=true
-      rvm: 1.9.3
-      addons:
-        firefox: 47.0.1
-        apt:
-          packages:
-            - awesome
-    - gemfile: gemfiles/Gemfile.base-versions
-      env:
-        - CAPYBARA_LEGACY_FF=true
-        - SKIP_WINDOW=true
-      rvm: 1.9.3
-      addons:
-        firefox: 47.0.1
-        apt:
-          packages:
-            - awesome
-    - gemfile: gemfiles/Gemfile.beta-versions
-      rvm: 2.3.3
-      addons:
-        firefox: latest-beta
-        apt:
-          packages:
-            - awesome
-    - gemfile: gemfiles/Gemfile.edge-marionette
-      rvm: 2.3.3
-      addons:
-        firefox: latest-nightly
-        apt:
-          packages:
-            - awesome
-    - gemfile: Gemfile
-      rvm: 2.4.1
-      addons:
-        firefox: latest-nightly
-      script: MOZ_HEADLESS=1 bundle exec rake travis
+    # - gemfile: gemfiles/Gemfile.rspec-34
+    #   rvm: 2.3.3
+    #   env: CAPYBARA_CHROME=true
+    #   addons:
+    #     apt:
+    #       sources:
+    #         - google-chrome
+    #       packages:
+    #         - google-chrome-stable
+    #         - awesome
+    # - gemfile: Gemfile
+    #   rvm: 2.4.1
+    #   env: CAPYBARA_CHROME_HEADLESS=true
+    #   addons:
+    #     apt:
+    #       sources:
+    #         - google-chrome
+    #       packages:
+    #         - google-chrome-stable
+    #         - google-chrome-beta
+    #         - awesome
+    # - gemfile: gemfiles/Gemfile.ruby-20
+    #   env:
+    #     - CAPYBARA_LEGACY_FF=true
+    #   rvm: 2.0.0
+    #   addons:
+    #     firefox: 47.0.1
+    #     apt:
+    #       packages:
+    #         - awesome
+    # - gemfile: gemfiles/Gemfile.ruby-19
+    #   env:
+    #     - CAPYBARA_LEGACY_FF=true
+    #     - SKIP_WINDOW=true
+    #   rvm: 1.9.3
+    #   addons:
+    #     firefox: 47.0.1
+    #     apt:
+    #       packages:
+    #         - awesome
+    # - gemfile: gemfiles/Gemfile.base-versions
+    #   env:
+    #     - CAPYBARA_LEGACY_FF=true
+    #     - SKIP_WINDOW=true
+    #   rvm: 1.9.3
+    #   addons:
+    #     firefox: 47.0.1
+    #     apt:
+    #       packages:
+    #         - awesome
+    # - gemfile: gemfiles/Gemfile.beta-versions
+    #   rvm: 2.3.3
+    #   addons:
+    #     firefox: latest-beta
+    #     apt:
+    #       packages:
+    #         - awesome
+    # - gemfile: gemfiles/Gemfile.edge-marionette
+    #   rvm: 2.3.3
+    #   addons:
+    #     firefox: latest-nightly
+    #     apt:
+    #       packages:
+    #         - awesome
+    # - gemfile: Gemfile
+    #   rvm: 2.4.1
+    #   addons:
+    #     firefox: latest-nightly
+    #   script: MOZ_HEADLESS=1 bundle exec rake travis
     - gemfile: Gemfile
       os: osx
       osx_image: xcode8.3
@@ -108,29 +106,29 @@ matrix:
       env: CAPYBARA_CHROME_HEADLESS=true
     - script: MOZ_HEADLESS=1 bundle exec rake travis
     - os: osx
-before_install:
-  - mkdir -p ~/drivers; export PATH=~/drivers:$PATH;
-  - if [ $CAPYBARA_CHROME ] || [ $CAPYBARA_CHROME_HEADLESS ]; then
-      CHROMEDRIVER_VERSION=$(wget -q -O - http://chromedriver.storage.googleapis.com/LATEST_RELEASE);
-      CHROMEDRIVER_URL="http://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip";
-      FILE=`mktemp`; wget "$CHROMEDRIVER_URL" -qO $FILE && unzip $FILE chromedriver -d ~/drivers; rm $FILE; chmod 777 ~/drivers/chromedriver;
-      ~/drivers/chromedriver --version;
-    fi
-  - GECKODRIVER_URL="https://github.com/mozilla/geckodriver/releases/download/v0.17.0/geckodriver-v0.17.0-linux64.tar.gz";
-    FILE=`mktemp`; wget "$GECKODRIVER_URL" -qO $FILE && tar xz -C ~/drivers -f $FILE geckodriver; rm $FILE; chmod 777 ~/drivers/geckodriver;
-    ~/drivers/geckodriver --version;
-  - if [[ $BUNDLE_GEMFILE =~ Gemfile.edge-marionette$ ]]; then
-      pushd ..;
-      git clone --depth 1 https://github.com/SeleniumHQ/selenium.git;
-      cd selenium; ./go //rb:gem:build;
-      popd;
-      bundle config local.selenium-webdriver ../selenium/build/rb;
-    fi
-before_script:
-  - export DISPLAY=:99.0
-  - sh -e /etc/init.d/xvfb start
-  - sleep 1
-  - mkdir -p ~/.config/awesome
-  - echo "require('awful'); tags = {}; tags[1] = awful.tag({'name'})" > ~/.config/awesome/rc.lua
-  - "awesome &"
-script: "bundle exec rake travis"
+# before_install:
+#   - mkdir -p ~/drivers; export PATH=~/drivers:$PATH;
+#   - if [ $CAPYBARA_CHROME ] || [ $CAPYBARA_CHROME_HEADLESS ]; then
+#       CHROMEDRIVER_VERSION=$(wget -q -O - http://chromedriver.storage.googleapis.com/LATEST_RELEASE);
+#       CHROMEDRIVER_URL="http://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip";
+#       FILE=`mktemp`; wget "$CHROMEDRIVER_URL" -qO $FILE && unzip $FILE chromedriver -d ~/drivers; rm $FILE; chmod 777 ~/drivers/chromedriver;
+#       ~/drivers/chromedriver --version;
+#     fi
+#   - GECKODRIVER_URL="https://github.com/mozilla/geckodriver/releases/download/v0.17.0/geckodriver-v0.17.0-linux64.tar.gz";
+#     FILE=`mktemp`; wget "$GECKODRIVER_URL" -qO $FILE && tar xz -C ~/drivers -f $FILE geckodriver; rm $FILE; chmod 777 ~/drivers/geckodriver;
+#     ~/drivers/geckodriver --version;
+#   - if [[ $BUNDLE_GEMFILE =~ Gemfile.edge-marionette$ ]]; then
+#       pushd ..;
+#       git clone --depth 1 https://github.com/SeleniumHQ/selenium.git;
+#       cd selenium; ./go //rb:gem:build;
+#       popd;
+#       bundle config local.selenium-webdriver ../selenium/build/rb;
+#     fi
+# before_script:
+#   - export DISPLAY=:99.0
+#   - sh -e /etc/init.d/xvfb start
+#   - sleep 1
+#   - mkdir -p ~/.config/awesome
+#   - echo "require('awful'); tags = {}; tags[1] = awful.tag({'name'})" > ~/.config/awesome/rc.lua
+#   - "awesome &"
+# script: "bundle exec rake travis"
